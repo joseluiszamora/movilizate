@@ -73,7 +73,7 @@ class MapScreen extends StatelessWidget {
         height: 40,
         child: GestureDetector(
           onTap: () => _showParkingDetails(context, parking),
-          // child: Icon(Icons.local_parking, color: Colors.blue, size: 40),
+          child: Icon(Icons.local_parking, color: Colors.blue, size: 40),
         ),
       );
     }).toList();

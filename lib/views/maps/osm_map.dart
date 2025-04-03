@@ -83,6 +83,11 @@ class _OsmMapState extends State<OsmMap> {
           FloatingActionButton(
             heroTag: 'center',
             onPressed: () {
+              // _mapController.animate(
+              //   widget.pointCenter,
+              //   zoom: 15.0,
+              //   duration: const Duration(milliseconds: 500),
+              // );
               _mapController.move(
                 widget.pointCenter,
                 _mapController.camera.zoom,
