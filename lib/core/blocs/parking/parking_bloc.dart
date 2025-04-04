@@ -92,7 +92,7 @@ class ParkingBloc extends Bloc<ParkingEvent, ParkingState> {
   }
 
   Future<List<Parking>> _fetchParkings(Position userPosition) async {
-    final response = await _supabase.from('parkings').select('*');
+    final response = await _supabase.from('parking').select('*');
 
     return (response as List).map((json) => Parking.fromJson(json)).toList();
   }

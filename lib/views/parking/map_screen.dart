@@ -8,8 +8,27 @@ import 'package:movilizate/views/parking/screens/error_ui_screen.dart';
 import 'package:movilizate/views/parking/screens/filter_screen.dart';
 import 'package:movilizate/views/parking/screens/parking_detail_screen.dart';
 
-class MapScreen extends StatelessWidget {
+class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
+
+  @override
+  State<MapScreen> createState() => _MapScreenState();
+}
+
+class _MapScreenState extends State<MapScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ParkingBloc>().add(const StartPeriodicUpdates());
+    });
+  }
+
+  @override
+  void dispose() {
+    context.read<ParkingBloc>().add(const StopPeriodicUpdates());
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +52,6 @@ class MapScreen extends StatelessWidget {
   }
 
   // --- Widgets Privados ---
-
   Widget _buildMapWithParkings(BuildContext context, ParkingLoaded state) {
     return Column(
       children: [
