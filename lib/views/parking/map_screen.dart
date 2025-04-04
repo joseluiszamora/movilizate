@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:movilizate/core/blocs/parking/parking_bloc.dart';
 import 'package:movilizate/core/models/filter_options.dart';
 import 'package:movilizate/core/models/parking.dart';
@@ -54,29 +53,13 @@ class MapScreen extends StatelessWidget {
         Expanded(
           child: OsmMap(
             pointCenter: state.userPosition,
-            markers: _buildParkingMarkers(state.parkings, context),
+            markers: state.parkings,
             onMapRefresh: () => _reloadParkings(context),
+            onMarkerTap: (parking) => _showParkingDetails(context, parking),
           ),
         ),
       ],
     );
-  }
-
-  List<Marker> _buildParkingMarkers(
-    List<Parking> parkings,
-    BuildContext context,
-  ) {
-    return parkings.map((parking) {
-      return Marker(
-        point: parking.position,
-        width: 40,
-        height: 40,
-        child: GestureDetector(
-          onTap: () => _showParkingDetails(context, parking),
-          child: Icon(Icons.local_parking, color: Colors.blue, size: 40),
-        ),
-      );
-    }).toList();
   }
 
   Widget _buildErrorUI(BuildContext context, String errorMessage) {
@@ -89,16 +72,6 @@ class MapScreen extends StatelessWidget {
   }
 
   // --- Funciones de Acción ---
-
-  void _showParkingDetails(BuildContext context, Parking parking) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return ParkingDetailScreen(parking: parking);
-      },
-    );
-  }
-
   void _showFilterScreen(BuildContext context) {
     FilterOptions filterOptions = FilterOptions(
       maxPrice: 10.0,
@@ -111,6 +84,15 @@ class MapScreen extends StatelessWidget {
       context: context,
       builder: (context) {
         return FilterScreen(initialFilters: filterOptions);
+      },
+    );
+  }
+
+  void _showParkingDetails(BuildContext context, Parking parking) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return ParkingDetailScreen(parking: parking);
       },
     );
   }

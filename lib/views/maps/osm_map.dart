@@ -3,7 +3,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:movilizate/core/models/parking.dart';
 import 'package:movilizate/core/utils/maps/custom_map_options.dart';
+import 'package:movilizate/views/maps/widgets/marker_parking.dart';
+import 'package:movilizate/views/maps/widgets/pulsating_user_marker.dart';
+import 'package:movilizate/views/maps/widgets/ripple_user_marker.dart';
 
 class OsmMap extends StatefulWidget {
   const OsmMap({
@@ -11,11 +15,13 @@ class OsmMap extends StatefulWidget {
     required this.pointCenter,
     required this.markers,
     required this.onMapRefresh,
+    required this.onMarkerTap,
   });
 
   final LatLng pointCenter;
-  final List<Marker> markers;
+  final List<Parking> markers;
   final Function() onMapRefresh;
+  final Function(Parking) onMarkerTap;
 
   @override
   State<OsmMap> createState() => _OsmMapState();
@@ -24,13 +30,21 @@ class OsmMap extends StatefulWidget {
 class _OsmMapState extends State<OsmMap> {
   late CacheManager _mapCacheManager;
   late MapController _mapController;
+  double _currentZoom = 15.0;
   bool _isLoadingMap = true;
 
   @override
   void initState() {
     super.initState();
-    _mapController = MapController();
     _initializeCacheManager();
+    _mapController = MapController();
+    _mapController.mapEventStream.listen((event) {
+      if (event is MapEventMoveEnd) {
+        setState(() {
+          _currentZoom = event.camera.zoom;
+        });
+      }
+    });
   }
 
   @override
@@ -50,30 +64,66 @@ class _OsmMapState extends State<OsmMap> {
     });
   }
 
+  //* Método para construir marcadores dinámicos
+  List<Marker> _buildDynamicMarkers(List<Parking> parkings, double zoom) {
+    // Ajustamos el tamaño base según el nivel de zoom
+    final baseSize = 30.0 + (zoom - 10.0); // Aumenta tamaño con zoom
+
+    final List<Marker> markers = [];
+    // Agregamos el marcador de usuario
+    markers.add(
+      Marker(
+        point: widget.pointCenter,
+        width: 60.0, // Tamaño suficiente para la animación
+        height: 60.0,
+        child: RippleUserMarker(color: Colors.blueAccent, size: 50.0),
+        // child: PulsatingUserMarker(color: Colors.blueAccent, size: 50.0),
+      ),
+    );
+
+    // Agregamos los marcadores de parqueos
+    for (var parking in parkings) {
+      markers.add(
+        MarkerParking().makeMarker(parking, baseSize, (parking) {
+          widget.onMarkerTap(parking);
+        }),
+      );
+    }
+
+    return markers;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoadingMap) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    mapUserPosition() => Marker(
-      point: widget.pointCenter,
-      width: 40,
-      height: 40,
-      child: const Icon(Icons.person_pin_circle, color: Colors.red, size: 40),
-    );
-
     return Scaffold(
       body: FlutterMap(
         mapController: _mapController,
         // opciones del mapa
-        options: CustomMapOptions().customMapOptions(widget.pointCenter),
+        options: MapOptions(
+          initialCenter: widget.pointCenter,
+          initialZoom: _currentZoom,
+          onPositionChanged: (position, hasGesture) {
+            if (hasGesture) {
+              setState(() {
+                _currentZoom = position.zoom;
+              });
+            }
+          },
+        ),
+        // options: CustomMapOptions().customMapOptions(widget.pointCenter),
         children: [
           // Capa personalizada del mapa
           CustomMapOptions().tileLayerOptions(_mapCacheManager),
 
           // Agregar marcadores
-          MarkerLayer(markers: widget.markers..add(mapUserPosition())),
+          // MarkerLayer(markers: widget.markers..add(mapUserPosition())),
+          MarkerLayer(
+            markers: _buildDynamicMarkers(widget.markers, _currentZoom),
+          ),
         ],
       ),
       floatingActionButton: Column(
@@ -81,13 +131,8 @@ class _OsmMapState extends State<OsmMap> {
         children: [
           //* Botón Center
           FloatingActionButton(
-            heroTag: 'center',
+            heroTag: 'centerLocation',
             onPressed: () {
-              // _mapController.animate(
-              //   widget.pointCenter,
-              //   zoom: 15.0,
-              //   duration: const Duration(milliseconds: 500),
-              // );
               _mapController.move(
                 widget.pointCenter,
                 _mapController.camera.zoom,

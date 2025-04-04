@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movilizate/core/models/parking.dart';
-import 'package:movilizate/views/maps/osm_map.dart';
 import 'package:movilizate/views/parking/components/info_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -164,11 +163,11 @@ class ParkingDetailScreen extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: OsmMap(
-            pointCenter: parking.position,
-            markers: [],
-            onMapRefresh: () {},
-          ),
+          // child: OsmMap(
+          //   pointCenter: parking.position,
+          //   markers: [],
+          //   onMapRefresh: () {},
+          // ),
         ),
       ),
     ],
