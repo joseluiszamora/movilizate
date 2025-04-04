@@ -5,8 +5,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movilizate/core/models/parking.dart';
 import 'package:movilizate/core/utils/maps/custom_map_options.dart';
+import 'package:movilizate/views/maps/widgets/map_actions_buttons.dart';
 import 'package:movilizate/views/maps/widgets/marker_parking.dart';
-import 'package:movilizate/views/maps/widgets/pulsating_user_marker.dart';
 import 'package:movilizate/views/maps/widgets/ripple_user_marker.dart';
 
 class OsmMap extends StatefulWidget {
@@ -126,54 +126,25 @@ class _OsmMapState extends State<OsmMap> {
           ),
         ],
       ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          //* Botón Center
-          FloatingActionButton(
-            heroTag: 'centerLocation',
-            onPressed: () {
-              _mapController.move(
-                widget.pointCenter,
-                _mapController.camera.zoom,
-              );
-            },
-            child: const Icon(Icons.my_location),
-          ),
-          const SizedBox(height: 10),
-          //* Botón refresh
-          FloatingActionButton(
-            heroTag: 'refresh',
-            onPressed: widget.onMapRefresh,
-            child: const Icon(Icons.refresh),
-          ),
-          const SizedBox(height: 10),
-          //* Botón zoom +
-          FloatingActionButton(
-            heroTag: 'zoomIn',
-            child: const Icon(Icons.add),
-            onPressed: () {
-              _mapController.move(
-                _mapController.camera.center,
-                _mapController.camera.zoom + 1,
-              );
-            },
-          ),
-          const SizedBox(height: 10),
-
-          //* Botón zoom +
-          FloatingActionButton(
-            heroTag: 'zoomOut',
-            child: const Icon(Icons.remove),
-            onPressed: () {
-              // Disminuir zoom
-              _mapController.move(
-                _mapController.camera.center,
-                _mapController.camera.zoom - 1,
-              );
-            },
-          ),
-        ],
+      floatingActionButton: MapActionButtons(
+        onCenterLocation: () {
+          _mapController.move(widget.pointCenter, _mapController.camera.zoom);
+        },
+        onRefresh: () => widget.onMapRefresh,
+        onZoomIn: () {
+          _mapController.move(
+            _mapController.camera.center,
+            _mapController.camera.zoom + 1,
+          );
+        },
+        onZoomOut: () {
+          _mapController.move(
+            _mapController.camera.center,
+            _mapController.camera.zoom - 1,
+          );
+        },
+        isDarkMode: false,
+        // isDarkMode: Theme.of(context).brightness == Brightness.dark,
       ),
     );
   }
