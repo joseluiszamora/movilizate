@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,10 +13,13 @@ part 'parking_state.dart';
 
 class ParkingBloc extends Bloc<ParkingEvent, ParkingState> {
   final SupabaseClient _supabase = Supabase.instance.client;
-  final Geolocator _geolocator = Geolocator();
+  // final Geolocator _geolocator = Geolocator();
+  Timer? _updateTimer;
 
   ParkingBloc() : super(ParkingLoading()) {
     on<LoadParkings>(_onLoadParkings);
+    on<StartPeriodicUpdates>(_onStartPeriodicUpdates);
+    on<StopPeriodicUpdates>(_onStopPeriodicUpdates);
   }
 
   Future<void> _onLoadParkings(
@@ -26,10 +31,7 @@ class ParkingBloc extends Bloc<ParkingEvent, ParkingState> {
       Position userPosition = await _getUserLocation();
 
       // Obtener parqueos de Supabase
-      final response = await _supabase.from('parking').select('*');
-
-      List<Parking> parkings =
-          (response as List).map((json) => Parking.fromJson(json)).toList();
+      final parkings = await _fetchParkings(userPosition);
 
       // Calcular distancias y marcar cercanos
       for (var parking in parkings) {
@@ -41,7 +43,6 @@ class ParkingBloc extends Bloc<ParkingEvent, ParkingState> {
         );
         parking.isNear = distance <= 500; // 500 metros como radio cercano
       }
-
       emit(
         ParkingLoaded(
           userPosition: LatLng(userPosition.latitude, userPosition.longitude),
@@ -51,6 +52,23 @@ class ParkingBloc extends Bloc<ParkingEvent, ParkingState> {
     } catch (e) {
       emit(ParkingError(e.toString()));
     }
+  }
+
+  void _onStartPeriodicUpdates(
+    StartPeriodicUpdates event,
+    Emitter<ParkingState> emit,
+  ) {
+    _updateTimer?.cancel();
+    _updateTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      add(const LoadParkings());
+    });
+  }
+
+  void _onStopPeriodicUpdates(
+    StopPeriodicUpdates event,
+    Emitter<ParkingState> emit,
+  ) {
+    _updateTimer?.cancel();
   }
 
   Future<Position> _getUserLocation() async {
@@ -73,6 +91,12 @@ class ParkingBloc extends Bloc<ParkingEvent, ParkingState> {
     );
   }
 
+  Future<List<Parking>> _fetchParkings(Position userPosition) async {
+    final response = await _supabase.from('parkings').select('*');
+
+    return (response as List).map((json) => Parking.fromJson(json)).toList();
+  }
+
   double _calculateDistance(
     double lat1,
     double lon1,
@@ -81,5 +105,11 @@ class ParkingBloc extends Bloc<ParkingEvent, ParkingState> {
   ) {
     const Distance distance = Distance();
     return distance(LatLng(lat1, lon1), LatLng(lat2, lon2));
+  }
+
+  @override
+  Future<void> close() {
+    _updateTimer?.cancel();
+    return super.close();
   }
 }

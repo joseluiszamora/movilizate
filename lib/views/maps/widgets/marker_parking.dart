@@ -22,6 +22,7 @@ class MarkerParking {
     final markerSize = baseSize * (parking.isNear ? 1.2 : 1.0);
 
     return Marker(
+      // rotate: true,
       point: parking.position,
       width: markerSize,
       height: markerSize,

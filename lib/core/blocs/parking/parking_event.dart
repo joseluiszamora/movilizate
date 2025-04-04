@@ -24,3 +24,17 @@ class FilterNearParkings extends ParkingEvent {
   @override
   List<Object> get props => [radiusInMeters];
 }
+
+class StartPeriodicUpdates extends ParkingEvent {
+  const StartPeriodicUpdates();
+
+  @override
+  List<Object> get props => [];
+}
+
+class StopPeriodicUpdates extends ParkingEvent {
+  const StopPeriodicUpdates();
+
+  @override
+  List<Object> get props => [];
+}

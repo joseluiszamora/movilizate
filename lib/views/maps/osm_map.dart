@@ -73,6 +73,7 @@ class _OsmMapState extends State<OsmMap> {
     // Agregamos el marcador de usuario
     markers.add(
       Marker(
+        // rotate: true,
         point: widget.pointCenter,
         width: 60.0, // Tamaño suficiente para la animación
         height: 60.0,
@@ -122,6 +123,7 @@ class _OsmMapState extends State<OsmMap> {
           // Agregar marcadores
           // MarkerLayer(markers: widget.markers..add(mapUserPosition())),
           MarkerLayer(
+            rotate: true,
             markers: _buildDynamicMarkers(widget.markers, _currentZoom),
           ),
         ],
