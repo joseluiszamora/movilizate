@@ -21,6 +21,15 @@ class ParkingLoaded extends ParkingState {
   List<Object> get props => [userPosition, parkings];
 }
 
+class ParkingDetailLoaded extends ParkingState {
+  final Parking parking;
+
+  const ParkingDetailLoaded(this.parking);
+
+  @override
+  List<Object> get props => [parking];
+}
+
 // Estado de error
 class ParkingError extends ParkingState {
   final String message;
