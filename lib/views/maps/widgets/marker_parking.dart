@@ -11,6 +11,8 @@ class MarkerParking {
     // Determinar color según disponibilidad
     final Color markerColor;
     if (!parking.isOpen) {
+      markerColor = Colors.grey;
+    } else if (parking.availableSpots == 0) {
       markerColor = Colors.red;
     } else if (parking.availableSpots < 5) {
       markerColor = Colors.orange;
