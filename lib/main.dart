@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movilizate/core/blocs/parking/parking_bloc.dart';
+import 'package:movilizate/core/routes/app_router.dart';
+import 'package:movilizate/core/themes/theme.dart';
 import 'package:movilizate/views/parking/map_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -26,22 +28,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Map Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Parqueos La Paz')),
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     // Recargar parqueos
-        //     context.read<ParkingBloc>().add(const LoadParkings());
-        //   },
-        //   child: const Icon(Icons.refresh),
-        // ),
-        body: const MapScreen(),
-      ),
+      theme: AppTheme.lightTheme(context),
+      routerConfig: appRouter(),
     );
   }
 }

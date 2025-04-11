@@ -109,7 +109,11 @@ class ParkingBloc extends Bloc<ParkingEvent, ParkingState> {
     //   event.filterOptions,
     // );
 
-    final filteredParkings = await getFilteredParkings(userLat: userPosition.latitude, userLng: userPosition.longitude, filters: event.filterOptions)
+    final filteredParkings = await getFilteredParkings(
+      userLat: userPosition.latitude,
+      userLng: userPosition.longitude,
+      filters: event.filterOptions,
+    );
 
     emit(
       ParkingLoaded(
