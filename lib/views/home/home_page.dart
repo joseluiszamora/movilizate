@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: Column(
         children: [
           // Mapa como fondo principal
           // GoogleMap(
@@ -24,28 +19,11 @@ class _HomePageState extends State<HomePage> {
           SizedBox(height: 200, child: Placeholder()),
 
           // Barra superior de búsqueda
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 10,
-            left: 10,
-            right: 10,
-            child: _buildSearchBar(),
-          ),
+          _buildSearchBar(),
 
-          // Selector de categorías
-          Positioned(
-            bottom: MediaQuery.of(context).size.height * 0.15,
-            left: 0,
-            right: 0,
-            child: _buildCategorySelector(),
-          ),
+          SizedBox(height: 20),
 
-          // Barra inferior con acciones rápidas
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _buildBottomActionBar(),
-          ),
+          _buildCategorySelector(),
         ],
       ),
     );
@@ -110,41 +88,6 @@ class _HomePageState extends State<HomePage> {
           ),
           SizedBox(height: 5),
           Text(label, style: TextStyle(fontSize: 12)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBottomActionBar() {
-    return Container(
-      height: 70,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          IconButton(
-            icon: Icon(Icons.my_location),
-            onPressed: () {
-              // Centrar mapa en ubicación actual
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.report),
-            onPressed: () {
-              // Reportar incidente
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              // Ir a configuración
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              // Abrir menú lateral
-            },
-          ),
         ],
       ),
     );
