@@ -9,6 +9,7 @@ import 'package:movilizate/views/home/home_page.dart';
 import 'package:movilizate/views/parking/parking_page.dart';
 import 'package:movilizate/views/poi/poi_page.dart';
 import 'package:movilizate/views/profile/profile_page.dart';
+import 'package:movilizate/views/teleferico_map/teleferico_map_page.dart';
 
 class NavigationBarPage extends StatefulWidget {
   const NavigationBarPage({super.key});
@@ -18,7 +19,7 @@ class NavigationBarPage extends StatefulWidget {
 }
 
 class _NavigationBarPageState extends State<NavigationBarPage> {
-  int _pageSelected = 0;
+  int _pageSelected = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,8 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
       const HomePage(),
       const FuelPage(),
       const ParkingPage(),
-      const PoiPage(),
+      const TelefericoMapPage(),
+      // const PoiPage(),
     ];
 
     return MaterialApp(
