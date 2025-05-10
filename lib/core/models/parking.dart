@@ -6,6 +6,7 @@ class Parking {
   final String address;
   final double latitude;
   final double longitude;
+  final double distance;
   final int totalSpots;
   final int availableSpots;
   final double pricePerHour;
@@ -21,6 +22,7 @@ class Parking {
     required this.address,
     required this.latitude,
     required this.longitude,
+    required this.distance,
     required this.totalSpots,
     required this.availableSpots,
     required this.pricePerHour,
@@ -38,6 +40,7 @@ class Parking {
       address: json['address'],
       latitude: json['latitude'].toDouble(),
       longitude: json['longitude'].toDouble(),
+      distance: json['distance']?.toDouble() ?? 0.0,
       totalSpots: json['totalSpots'],
       availableSpots: json['availableSpots'],
       pricePerHour: json['pricePerHour'].toDouble(),
@@ -66,6 +69,7 @@ class Parking {
       'address': address,
       'latitude': latitude,
       'longitude': longitude,
+      'distance': distance,
       'totalSpots': totalSpots,
       'availableSpots': availableSpots,
       'pricePerHour': pricePerHour,

@@ -58,7 +58,6 @@ class _MapScreenState extends State<MapScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("data Home"),
             //* Opcion para filtrar mapas
             IconButton(
               icon: Icon(Icons.filter_list),

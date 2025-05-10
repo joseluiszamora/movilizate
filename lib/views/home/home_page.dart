@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:movilizate/core/models/parking.dart';
+import 'package:movilizate/views/home/components/search_bar.dart';
+import 'package:movilizate/views/home/components/parking_section.dart';
+import 'package:movilizate/views/home/components/nearby_section.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -6,89 +10,95 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          // Mapa como fondo principal
-          // GoogleMap(
-          //   onMapCreated: _onMapCreated,
-          //   initialCameraPosition: CameraPosition(target: _center, zoom: 11.0),
-          //   myLocationEnabled: true,
-          //   myLocationButtonEnabled: false,
-          //   trafficEnabled: true,
-          // ),
-          SizedBox(height: 200, child: Placeholder()),
-
-          // Barra superior de búsqueda
-          _buildSearchBar(),
-
-          SizedBox(height: 20),
-
-          _buildCategorySelector(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          children: [
-            Icon(Icons.search, color: Colors.grey),
-            SizedBox(width: 8),
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Buscar dirección o lugar...',
-                  border: InputBorder.none,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: ListView(
+            children: [
+              // Texto principal clickeable usando GestureDetector
+              Text(
+                "Encontremos lo mejor\ncerca de ti",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black54,
+                  height: 1.2,
                 ),
               ),
-            ),
-            IconButton(
-              icon: Icon(Icons.mic),
-              onPressed: () {
-                // Acción para búsqueda por voz
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  Widget _buildCategorySelector() {
-    return Container(
-      height: 100,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        children: [
-          _buildCategoryItem(Icons.gas_meter, 'Gasolineras', Colors.blue),
-          _buildCategoryItem(Icons.local_parking, 'Parqueos', Colors.green),
-          _buildCategoryItem(Icons.warning, 'Conflictos', Colors.red),
-          _buildCategoryItem(Icons.restaurant, 'Restaurantes', Colors.orange),
-          _buildCategoryItem(Icons.hotel, 'Hoteles', Colors.purple),
-        ],
-      ),
-    );
-  }
+              const SizedBox(height: 20),
 
-  Widget _buildCategoryItem(IconData icon, String label, Color color) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: color.withOpacity(0.2),
-            child: Icon(icon, color: color, size: 30),
+              // Barra de búsqueda clickeable (envolvemos todo el componente)
+              const HomeSearchBar(),
+
+              const SizedBox(height: 25),
+
+              // Sección de mejores estacionamientos
+              ParkingSection(
+                title: 'Parqueos Cercanos',
+                parkingSpots: [
+                  Parking(
+                    id: 101,
+                    name: 'Elia Garder Parking',
+                    address: 'Ivory Elephant street',
+                    pricePerHour: 6,
+                    rating: 4.4,
+                    latitude: 0.0,
+                    longitude: 0.0,
+                    distance: 1.24,
+                    imageUrl: 'assets/images/parking1.jpg',
+                    totalSpots: 10,
+                    availableSpots: 5,
+                    isOpen: false,
+                    isNear: false,
+                    services: [],
+                  ),
+                  Parking(
+                    id: 102,
+                    name: 'Mall Gozilas Parking',
+                    address: 'Ivory Elephant street',
+                    pricePerHour: 6,
+                    rating: 4.4,
+                    latitude: 0.0,
+                    longitude: 0.0,
+                    distance: 1.24,
+                    imageUrl: 'assets/images/parking1.jpg',
+                    totalSpots: 10,
+                    availableSpots: 5,
+                    isOpen: false,
+                    isNear: false,
+                    services: [],
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 25),
+
+              // Sección de estacionamientos cercanos
+              NearbySection(
+                title: 'Nearby You',
+                nearbySpots: [
+                  Parking(
+                    id: 102,
+                    name: 'Mall Gozilas Parking',
+                    address: 'Ivory Elephant street',
+                    pricePerHour: 6,
+                    rating: 4.4,
+                    latitude: 0.0,
+                    longitude: 0.0,
+                    distance: 1.24,
+                    imageUrl: 'assets/images/parking1.jpg',
+                    totalSpots: 10,
+                    availableSpots: 5,
+                    isOpen: false,
+                    isNear: false,
+                    services: [],
+                  ),
+                ],
+              ),
+            ],
           ),
-          SizedBox(height: 5),
-          Text(label, style: TextStyle(fontSize: 12)),
-        ],
+        ),
       ),
     );
   }

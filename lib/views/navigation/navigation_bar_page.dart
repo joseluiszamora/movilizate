@@ -5,6 +5,7 @@ import 'package:movilizate/core/constants/app_colors.dart';
 import 'package:movilizate/core/constants/app_defaults.dart';
 import 'package:movilizate/core/layouts/layout_main.dart';
 import 'package:movilizate/views/fuel/fuel_page.dart';
+import 'package:movilizate/views/navigation/components/header_section.dart';
 import 'package:movilizate/views/home/home_page.dart';
 import 'package:movilizate/views/parking/parking_page.dart';
 import 'package:movilizate/views/poi/poi_page.dart';
@@ -19,7 +20,9 @@ class NavigationBarPage extends StatefulWidget {
 }
 
 class _NavigationBarPageState extends State<NavigationBarPage> {
-  int _pageSelected = 3;
+  int _pageSelected = 0;
+  // Define el key como una propiedad de la clase
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,22 +34,18 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
       const TelefericoMapPage(),
       // const PoiPage(),
     ];
+    const String avatarUrl =
+        'https://placeholder.pics/svg/100/DEDEDE/555555/profile';
+
+    const String location = 'La Paz, Bolivia';
 
     return MaterialApp(
       home: Scaffold(
-        // appBar: AppBar(title: const Text('Movilizate')),
-        appBar: AppBar(
-          title: Text('Movilizate'),
-          leading: Builder(
-            builder:
-                (context) => IconButton(
-                  icon: Icon(Icons.menu),
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                ),
-          ),
-          actions: [
-            IconButton(icon: Icon(Icons.notifications), onPressed: () {}),
-          ],
+        key: _scaffoldKey,
+        appBar: HeaderSection(
+          location: location,
+          avatarUrl: avatarUrl,
+          openDrawer: () => _scaffoldKey.currentState?.openDrawer(),
         ),
         drawer: _buildDrawer(context),
 
@@ -138,7 +137,7 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
 
   Widget _buildDrawerHeader() {
     return DrawerHeader(
-      decoration: BoxDecoration(color: Colors.blue),
+      decoration: BoxDecoration(color: const Color(0xFF0bbfdf)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.end,

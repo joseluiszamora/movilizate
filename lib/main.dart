@@ -29,7 +29,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Flutter Map Demo',
+      title: 'Movilizate',
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme(context),
       routerConfig: appRouter(),
     );

@@ -6,8 +6,8 @@ import 'package:movilizate/views/navigation/navigation_bar_page.dart';
 import 'package:movilizate/views/splash/splash_page.dart';
 
 GoRouter appRouter() => GoRouter(
-  // initialLocation: AppRoutes.fuelStationPage,
-  initialLocation: AppRoutes.navigation,
+  // Cambiar initialLocation al splash
+  initialLocation: AppRoutes.splash,
   routes: publicRoutes(),
 );
 
